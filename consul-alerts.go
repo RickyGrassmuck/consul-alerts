@@ -51,6 +51,7 @@ var consulClient consul.Consul
 
 func main() {
 	log.SetLevel(log.InfoLevel)
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
 	args, _ := docopt.Parse(usage, nil, true, version, false)
 
 	switch {
