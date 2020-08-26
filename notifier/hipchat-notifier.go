@@ -9,7 +9,7 @@ import (
 
 	"github.com/tbruyelle/hipchat-go/hipchat"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 type HipChatNotifier struct {
@@ -46,11 +46,11 @@ func (notifier *HipChatNotifier) Notify(messages Messages) bool {
 		}
 	}
 
-	level := "green"
+	level := hipchat.ColorGreen
 	if fail > 0 {
-		level = "red"
+		level = hipchat.ColorRed
 	} else if warn > 0 {
-		level = "yellow"
+		level = hipchat.ColorYellow
 	}
 
 	client := hipchat.NewClient(notifier.AuthToken)

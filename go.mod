@@ -1,22 +1,28 @@
 module github.com/AcalephStorage/consul-alerts
 
-go 1.12
+go 1.14
 
 require (
-	github.com/Sirupsen/logrus v0.0.0-20150608235533-e3eccfaeb58b
-	github.com/aws/aws-sdk-go v0.0.0-20180706225419-23e3775971f2
-	github.com/cihub/seelog v0.0.0-20151216153121-3549fbb0ea07 // indirect
-	github.com/darkcrux/gopherduty v0.0.0-20141111074048-4109bd05b098
-	github.com/docopt/docopt-go v0.0.0-20140806175443-c5dac5363019
-	github.com/franela/goreq v0.0.0-20150617052128-41f8ae0dfac5 // indirect
-	github.com/go-ini/ini v0.0.0-20180615003539-cec2bdc49009 // indirect
-	github.com/google/go-querystring v0.0.0-20150414214848-547ef5ac9797 // indirect
-	github.com/hashicorp/consul v0.0.0-20150609223947-5aa90455ce78
-	github.com/imdario/mergo v0.0.0-20160517064435-50d4dbd4eb0e
-	github.com/influxdb/influxdb v0.8.5
-	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
-	github.com/mitchellh/hashstructure v0.0.0-20160609170929-b098c52ef6be
-	github.com/opsgenie/opsgenie-go-sdk v0.0.0-20180619084527-6d5c78d9f21e
-	github.com/rs/zerolog v1.14.3
-	github.com/tbruyelle/hipchat-go v0.0.0-20160120154433-55738d370904
+	github.com/aws/aws-sdk-go v1.31.11
+	github.com/cihub/seelog v0.0.0-20170130134532-f561c5e57575 // indirect
+	github.com/darkcrux/gopherduty v0.0.0-20150127012016-f4906ce7e59b
+	github.com/docopt/docopt-go v0.0.0-20180111231733-ee0de3bc6815
+	github.com/franela/goblin v0.0.0-20200520163857-b1327edf70e4 // indirect
+	github.com/franela/goreq v0.0.0-20171204163338-bcd34c9993f8 // indirect
+	github.com/google/btree v1.0.0 // indirect
+	github.com/google/go-querystring v1.0.0 // indirect
+	github.com/hashicorp/consul/api v1.4.0
+	github.com/hashicorp/golang-lru v0.5.1 // indirect
+	github.com/imdario/mergo v0.3.9
+	github.com/mattn/go-colorable v0.1.7 // indirect
+	github.com/mitchellh/hashstructure v1.0.0
+	github.com/onsi/gomega v1.10.1 // indirect
+	github.com/opsgenie/opsgenie-go-sdk v0.0.0-20181102130742-d57b8391ca90
+	github.com/sirupsen/logrus v1.6.0
+	github.com/tbruyelle/hipchat-go v0.0.0-20170717082847-35aebc99209a
+	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
+	golang.org/x/net v0.0.0-20200822124328-c89045814202 // indirect
+	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
+	golang.org/x/sys v0.0.0-20200824131525-c12d262b63d8 // indirect
+	golang.org/x/text v0.3.3 // indirect
 )

@@ -3,10 +3,10 @@ package notifier
 import (
 	"fmt"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
+	log "github.com/sirupsen/logrus"
 )
 
 type AwsSnsNotifier struct {

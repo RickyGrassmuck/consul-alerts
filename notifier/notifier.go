@@ -62,8 +62,8 @@ func (n Notifiers) GetNotifier(name string) (Notifier, bool) {
 		return n.Email, true
 	case n.Log != nil && n.Log.NotifierName() == name:
 		return n.Log, true
-	case n.Influxdb != nil && n.Influxdb.NotifierName() == name:
-		return n.Influxdb, true
+	// case n.Influxdb != nil && n.Influxdb.NotifierName() == name:
+	// 	return n.Influxdb, true
 	case n.Slack != nil && n.Slack.NotifierName() == name:
 		return n.Slack, true
 	case n.Mattermost != nil && n.Mattermost.NotifierName() == name:

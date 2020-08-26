@@ -1,9 +1,10 @@
 package main
 
 import (
-	log "github.com/Sirupsen/logrus"
-	consulapi "github.com/hashicorp/consul/api"
 	"time"
+
+	consulapi "github.com/hashicorp/consul/api"
+	log "github.com/sirupsen/logrus"
 )
 
 const LockKey = "consul-alerts/leader"

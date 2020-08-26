@@ -9,7 +9,7 @@ import (
 
 	"github.com/AcalephStorage/consul-alerts/consul"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 type EventProcessor struct {

@@ -5,8 +5,9 @@ import (
 
 	"net/smtp"
 
-	log "github.com/Sirupsen/logrus"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var sendMail = smtp.SendMail

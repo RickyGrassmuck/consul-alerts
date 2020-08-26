@@ -6,14 +6,14 @@ import (
 
 	"net/http"
 
-	"github.com/AcalephStorage/consul-alerts/consul"
 	"github.com/AcalephStorage/consul-alerts/notifier"
+	consulapi "github.com/hashicorp/consul/api"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 type CheckProcessor struct {
-	inChan         chan []consul.Check
+	inChan         chan []consulapi.HealthCheck
 	closeChan      chan struct{}
 	firstRun       bool
 	notifEngine    *NotifEngine
@@ -58,7 +58,7 @@ func (c *CheckProcessor) reminderRun() {
 	messages := consulClient.GetReminders()
 	filteredMessages := make(notifier.Messages, 0)
 	for _, message := range messages {
-		check := &consul.Check{
+		check := &consulapi.HealthCheck{
 			Node:        message.Node,
 			CheckID:     message.CheckId,
 			Name:        message.Check,
@@ -87,7 +87,7 @@ func (c *CheckProcessor) reminderRun() {
 	}
 }
 
-func (c *CheckProcessor) handleChecks(checks []consul.Check) {
+func (c *CheckProcessor) handleChecks(checks []consulapi.HealthCheck) {
 	consulClient.LoadConfig()
 
 	retryCount := 0
@@ -120,7 +120,7 @@ func (c *CheckProcessor) handleChecks(checks []consul.Check) {
 
 }
 
-func (c *CheckProcessor) notify(alerts []consul.Check) {
+func (c *CheckProcessor) notify(alerts []consulapi.HealthCheck) {
 	messages := make([]notifier.Message, len(alerts))
 	for i, alert := range alerts {
 		profileInfo := consulClient.GetProfileInfo(alert.Node, alert.ServiceID, alert.CheckID, alert.Status)
@@ -159,7 +159,7 @@ func (c *CheckProcessor) notify(alerts []consul.Check) {
 
 func startCheckProcessor(leaderCandidate *LeaderElection, notifEngine *NotifEngine) *CheckProcessor {
 	cp := &CheckProcessor{
-		inChan:         make(chan []consul.Check, 1),
+		inChan:         make(chan []consulapi.HealthCheck, 1),
 		closeChan:      make(chan struct{}),
 		firstRun:       true,
 		notifEngine:    notifEngine,
@@ -189,7 +189,7 @@ func (c *CheckProcessor) checkHandler(w http.ResponseWriter, r *http.Request) {
 		<-c.inChan
 	}
 
-	var checks []consul.Check
+	var checks []consulapi.HealthCheck
 	toWatchObject(r.Body, &checks)
 	c.inChan <- checks
 	w.WriteHeader(200)

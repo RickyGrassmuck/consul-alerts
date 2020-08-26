@@ -16,8 +16,8 @@ import (
 	"github.com/AcalephStorage/consul-alerts/consul"
 	"github.com/AcalephStorage/consul-alerts/notifier"
 
-	log "github.com/Sirupsen/logrus"
 	docopt "github.com/docopt/docopt-go"
+	log "github.com/sirupsen/logrus"
 )
 
 const version = "Consul Alerts 0.5.0"
@@ -241,7 +241,7 @@ func builtinNotifiers() map[string]notifier.Notifier {
 
 	emailNotifier := consulClient.EmailNotifier()
 	logNotifier := consulClient.LogNotifier()
-	influxdbNotifier := consulClient.InfluxdbNotifier()
+	// influxdbNotifier := consulClient.InfluxdbNotifier()
 	slackNotifier := consulClient.SlackNotifier()
 	mattermostNotifier := consulClient.MattermostNotifier()
 	mattermostWebhookNotifier := consulClient.MattermostWebhookNotifier()
@@ -259,9 +259,9 @@ func builtinNotifiers() map[string]notifier.Notifier {
 	if logNotifier.Enabled {
 		notifiers[logNotifier.NotifierName()] = logNotifier
 	}
-	if influxdbNotifier.Enabled {
-		notifiers[influxdbNotifier.NotifierName()] = influxdbNotifier
-	}
+	// if influxdbNotifier.Enabled {
+	// 	notifiers[influxdbNotifier.NotifierName()] = influxdbNotifier
+	// }
 	if slackNotifier.Enabled {
 		notifiers[slackNotifier.NotifierName()] = slackNotifier
 	}

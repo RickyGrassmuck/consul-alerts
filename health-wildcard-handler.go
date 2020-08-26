@@ -2,9 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	log "github.com/Sirupsen/logrus"
 	"net/http"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func healthWildcardHandler(w http.ResponseWriter, r *http.Request) {
