@@ -1,7 +1,7 @@
 consul-alerts
 =============
 
-### Original work by [AcalephStorage](https://github.com/AcalephStorage/consul-alerts)
+### Forked from [AcalephStorage/consul-alerts](https://github.com/AcalephStorage/consul-alerts)
 
 A highly available daemon for sending notifications and reminders based on Consul health checks.
 
