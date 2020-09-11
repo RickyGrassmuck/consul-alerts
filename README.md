@@ -5,6 +5,8 @@ consul-alerts
 
 ### Forked from [ansrivas/consul-alerts](https://github.com/ansrivas/consul-alerts) who added Go Module support!
 
+## Description
+
 A highly available daemon for sending notifications and reminders based on Consul health checks.
 
 Under the covers, consul-alerts leverages Consul's own leadership election and KV store to provide automatic failover and seamless operation in the case of a consul-alerts node failure and ensures that your notifications are still sent.
