@@ -23,6 +23,9 @@ format:
 test: prepare format
 	@echo "--> Testing application"
 	@go test -outputdir build/test ./...
+buid-no-test:
+	@echo "--> Building local application"
+	@go build -o build/bin/`uname -s`-`uname -p`/${VERSION}/${APP_NAME} -v .
 
 build: test
 	@echo "--> Building local application"
@@ -37,12 +40,27 @@ build-all: test
 		go build -o build/bin/$${arch}/${VERSION}/${APP_NAME} -v . ; \
 	done
 
+build-all-no-test: 
+	@echo "--> Building all application"
+	@for arch in ${BUILD_ARCHS}; do \
+		echo "... $${arch}"; \
+		GOOS=`echo $${arch} | cut -d '-' -f 1` \
+		GOARCH=`echo $${arch} | cut -d '-' -f 2` \
+		go build -o build/bin/$${arch}/${VERSION}/${APP_NAME} -v . ; \
+	done
+
 package: build-all
 	@echo "--> Packaging application"
 	@for arch in ${BUILD_ARCHS}; do \
 		tar czf build/tar/${APP_NAME}-${VERSION}-$${arch}.tgz -C build/bin/$${arch}/${VERSION} ${APP_NAME} ; \
 	done
 
+package-no-test: build-all-no-test
+	@echo "--> Packaging application"
+	@for arch in ${BUILD_ARCHS}; do \
+		tar czf build/tar/${APP_NAME}-${VERSION}-$${arch}.tgz -C build/bin/$${arch}/${VERSION} ${APP_NAME} ; \
+	done
+	
 release: package
 ifeq ($(VERSION) , latest)
 	@echo "--> Removing Latest Version"
