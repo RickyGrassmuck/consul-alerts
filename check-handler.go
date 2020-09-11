@@ -6,8 +6,8 @@ import (
 
 	"net/http"
 
-	"github.com/AcalephStorage/consul-alerts/consul"
-	"github.com/AcalephStorage/consul-alerts/notifier"
+	"github.com/rigrassm/consul-alerts/consul"
+	"github.com/rigrassm/consul-alerts/notifier"
 
 	log "github.com/Sirupsen/logrus"
 )

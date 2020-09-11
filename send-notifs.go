@@ -9,7 +9,7 @@ import (
 	"github.com/imdario/mergo"
 	"github.com/mitchellh/hashstructure"
 
-	"github.com/AcalephStorage/consul-alerts/notifier"
+	"github.com/rigrassm/consul-alerts/notifier"
 )
 
 // NotifEngine handles notifications.

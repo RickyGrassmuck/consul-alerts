@@ -1,12 +1,13 @@
-module github.com/AcalephStorage/consul-alerts
+module github.com/rigrassm/consul-alerts
 
-go 1.12
+go 1.15
 
 require (
+	github.com/rigrassm/consul-alerts v0.6.0
 	github.com/Sirupsen/logrus v0.0.0-20150608235533-e3eccfaeb58b
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/aws/aws-sdk-go v0.0.0-20180706225419-23e3775971f2
-	github.com/cihub/seelog v0.0.0-20151216153121-3549fbb0ea07 // indirect
+	github.com/cihub/seelog v0.0.0-20170130134532-f561c5e57575 // indirect
 	github.com/darkcrux/gopherduty v0.0.0-20141111074048-4109bd05b098
 	github.com/docopt/docopt-go v0.0.0-20140806175443-c5dac5363019
 	github.com/franela/goblin v0.0.0-20200825194134-80c0062ed6cd // indirect
@@ -19,8 +20,8 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/imdario/mergo v0.0.0-20160517064435-50d4dbd4eb0e
 	github.com/influxdb/influxdb v0.8.5
-	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
-	github.com/mitchellh/hashstructure v0.0.0-20160609170929-b098c52ef6be
+	github.com/jmespath/go-jmespath v0.3.0 // indirect
+	github.com/mitchellh/hashstructure v1.0.0
 	github.com/onsi/gomega v1.10.2 // indirect
 	github.com/opsgenie/opsgenie-go-sdk v0.0.0-20180619084527-6d5c78d9f21e
 	github.com/smartystreets/goconvey v1.6.4 // indirect
