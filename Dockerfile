@@ -1,19 +1,13 @@
-FROM alpine:edge
-MAINTAINER Acaleph <admin@acale.ph>
-
+FROM golang:1.15 AS golang
 ENV GOPATH /go
+COPY . /go/src/consul-alerts 
+WORKDIR /go/src/consul-alerts 
+RUN go mod tidy
+RUN go build -o /go/bin/consul-alerts .
 
-RUN mkdir -p /go && \
-    apk update && \
-    apk add bash ca-certificates git go alpine-sdk && \
-    go get -v github.com/AcalephStorage/consul-alerts && \
-    mv /go/bin/consul-alerts /bin && \
-    go get -v github.com/hashicorp/consul && \
-    mv /go/bin/consul /bin && \
-    rm -rf /go && \
-    apk del --purge go git alpine-sdk && \
-    rm -rf /var/cache/apk/*
-
+FROM gcr.io/distroless/base-debian10
+WORKDIR /bin/
+COPY --from=golang /go/bin/consul-alerts .
 EXPOSE 9000
 CMD []
 ENTRYPOINT [ "/bin/consul-alerts", "--alert-addr=0.0.0.0:9000" ]
