@@ -3,7 +3,6 @@ module github.com/rigrassm/consul-alerts
 go 1.15
 
 require (
-	github.com/rigrassm/consul-alerts v0.7.0
 	github.com/Sirupsen/logrus v0.0.0-20150608235533-e3eccfaeb58b
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/aws/aws-sdk-go v0.0.0-20180706225419-23e3775971f2

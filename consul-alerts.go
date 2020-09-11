@@ -21,7 +21,7 @@ import (
 	docopt "github.com/docopt/docopt-go"
 )
 
-const version = "Consul Alerts 0.7.0"
+const version = "Consul Alerts 0.7.1"
 const usage = `Consul Alerts.
 
 Usage:
