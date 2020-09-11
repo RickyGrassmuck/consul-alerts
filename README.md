@@ -1,7 +1,7 @@
 consul-alerts
 =============
 
-[![Join the chat at https://gitter.im/AcalephStorage/consul-alerts](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/AcalephStorage/consul-alerts?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+### Original work by [AcalephStorage](https://github.com/AcalephStorage/consul-alerts)
 
 A highly available daemon for sending notifications and reminders based on Consul health checks.
 
@@ -22,19 +22,15 @@ consul-alerts provides a high degree of configuration including:
 Releases
 --------
 
-Stable release are [here](https://github.com/AcalephStorage/consul-alerts/releases).
+Stable release are [here](https://github.com/rigrassm/consul-alerts/releases).
 
-Latest release are found here:
- - [darwin-amd64](https://bintray.com/artifact/download/darkcrux/generic/consul-alerts-latest-darwin-amd64.tar)
- - [FreeBSD-amd64](https://bintray.com/artifact/download/darkcrux/generic/consul-alerts-latest-FreeBSD-amd64.tar)
- - [linux-386](https://bintray.com/artifact/download/darkcrux/generic/consul-alerts-latest-linux-386.tar)
- - [linux-amd64](https://bintray.com/artifact/download/darkcrux/generic/consul-alerts-latest-linux-amd64.tar)
+
 
 Installation
 ------------
 
 ```
-$ go get github.com/AcalephStorage/consul-alerts
+$ go get github.com/rigrassm/consul-alerts
 $ go install
 ```
 
@@ -43,7 +39,7 @@ This should install consul-alerts to `$GOPATH/bin`
 or pull the image from `docker`:
 
 ```
-$ docker pull acaleph/consul-alerts
+$ docker pull quay.io/rgrassmuck/consul-alerts
 
 ```
 
@@ -57,7 +53,7 @@ $ consul-alerts start
 By default, this runs the daemon and API at localhost:9000 and connects to the local consul agent (localhost:8500) and default datacenter (dc1). These can be overriden by the following flags:
 
 ```
-$ consul-alerts start --alert-addr=localhost:9000 --consul-addr=localhost:8500 --consul-dc=dc1 --consul-acl-token=""
+$ consul-alerts start --alert-addr=localhost:9000 --consul-scheme=http --consul-addr=localhost:8500 --consul-dc=dc1 --consul-acl-token=""
 ```
 
 Once the daemon is running, it can act as a handler for consul watches. At the moment only checks and events are supported.
@@ -78,26 +74,7 @@ Usage - Docker
 
 There are a few options for running in docker.
 
-First option is using the consul agent built into the container. This option requires overriding the default entry point and running an exec to launch consul alerts.
-
-Start consul:
-
-```
-docker run -ti \
-  --rm -p 9000:9000 \
-  --hostname consul-alerts \
-  --name consul-alerts \
-  --entrypoint=/bin/consul \
-  acaleph/consul-alerts \
-  agent -data-dir /data -server -bootstrap -client=0.0.0.0
-```
-Then in a separate terminal start consul-alerts:
-
-```
-$ docker exec -ti consul-alerts /bin/consul-alerts start --alert-addr=0.0.0.0:9000 --log-level=info --watch-events --watch-checks
-```
-
-The second option is to link to an existing consul container through docker networking and --link option.  This method can more easily
+The first option is to link to an existing consul container through docker networking and --link option.  This method can more easily
 share the consul instance with other containers such as vault.
 
 First launch consul container:
@@ -121,7 +98,8 @@ $ docker run -ti \
   --hostname consul-alerts \
   --name consul-alerts \
   --link consul:consul \
-  acaleph/consul-alerts start \
+  quay.io/rgrassmuck/consul-alerts start \
+  --consul-scheme=http \
   --consul-addr=consul:8500 \
   --log-level=info --watch-events --watch-checks
 ```
@@ -133,7 +111,8 @@ $ docker run -ti \
   -p 9000:9000 \
   --hostname consul-alerts \
   --name consul-alerts \
-  acaleph/consul-alerts start \
+  quay.io/rgrassmuck/consul-alerts start \
+  --consul-scheme=http \
   --consul-addr=remote-consul-server.domain.tdl:8500 \
   --log-level=info --watch-events --watch-checks
 ```
