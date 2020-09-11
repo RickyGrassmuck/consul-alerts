@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"syscall"
@@ -12,11 +13,11 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-func runWatcher(consulAddr, datacenter, alertAddr, logLevel, consulAclToken, watchType string) {
+func runWatcher(scheme, addr, datacenter, alertAddr, logLevel, consulAclToken, watchType string) {
 	consulAlert := os.Args[0]
 	cmd := exec.Command(
 		"consul", "watch",
-		"-http-addr", consulAddr,
+		"-http-addr", fmt.Sprintf("%s://%s", scheme, addr),
 		"-datacenter", datacenter,
 		"-token", consulAclToken,
 		"-type", watchType,

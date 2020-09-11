@@ -30,8 +30,20 @@ type ConsulAlertClient struct {
 	config *ConsulAlertConfig
 }
 
-func NewClient(address, dc, aclToken string) (*ConsulAlertClient, error) {
+func NewClient(scheme, address, dc, aclToken, logLevelString string) (*ConsulAlertClient, error) {
+	loglevel, err := log.ParseLevel(logLevelString)
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
+
+	if err == nil {
+		log.SetLevel(loglevel)
+	} else {
+		log.Infof("Log level not set: %s", err)
+		defaultLogLevel, _ := log.ParseLevel("info")
+		log.SetLevel(defaultLogLevel)
+	}
+
 	config := consulapi.DefaultConfig()
+	config.Scheme = scheme
 	config.Address = address
 	config.Datacenter = dc
 	config.Token = aclToken
@@ -46,10 +58,10 @@ func NewClient(address, dc, aclToken string) (*ConsulAlertClient, error) {
 	try := 1
 	for {
 		try += try
-		log.Println("Checking consul agent connection...")
+		log.Info("Checking consul agent connection...")
 		_, err := client.api.Status().Leader()
 		if err != nil {
-			log.Println("Waiting for consul:", err)
+			log.Warnf("Error connecting to Consul: %s", err)
 			if try > 10 {
 				return nil, err
 			}
@@ -250,12 +262,12 @@ func (c *ConsulAlertClient) LoadConfig() {
 			}
 
 			if valErr != nil {
-				log.Printf(`unable to load custom value for "%s". Using default instead. Error: %s`, key, valErr.Error())
+				log.Warnf(`unable to load custom value for "%s". Using default instead. Error: %s`, key, valErr.Error())
 			}
 
 		}
 	} else {
-		log.Println("Unable to load custom config, using default instead:", err)
+		log.Warnf("Unable to load custom config, using default instead:", err)
 	}
 
 }
@@ -309,7 +321,7 @@ func (c *ConsulAlertClient) UpdateCheckData() {
 	remindersSubsLevel := 4
 
 	for index := range reminderKeys {
-		log.Printf("checking for stale reminders")
+		log.Infoln("checking for stale reminders")
 		s := strings.Split(reminderKeys[index].Key, "/")
 		// check if the consul-alerts/reminders/ folder has sub folders
 		if len(s) >= remindersSubsLevel {
@@ -325,7 +337,7 @@ func (c *ConsulAlertClient) UpdateCheckData() {
 				}
 			}
 			if settodelete {
-				log.Printf("Reminder %s %s needs to be deleted, stale", node, check)
+				log.Infof("Reminder %s %s needs to be deleted, stale", node, check)
 				c.DeleteReminder(node, check)
 			}
 		}
@@ -347,7 +359,7 @@ func (c *ConsulAlertClient) UpdateCheckData() {
 		localHealth := Check(*health)
 
 		if c.IsBlacklisted(&localHealth) {
-			log.Printf("%s:%s:%s is blacklisted.", node, service, check)
+			log.Infof("%s:%s:%s is blacklisted.", node, service, check)
 			continue
 		}
 
@@ -362,7 +374,7 @@ func (c *ConsulAlertClient) UpdateCheckData() {
 		reminderexists := reminderstatus != nil
 
 		if err != nil {
-			log.Println("Unable to get kv value: ", err)
+			log.Errorf("Unable to get kv value: ", err)
 		}
 
 		if reminderexists {
@@ -372,7 +384,7 @@ func (c *ConsulAlertClient) UpdateCheckData() {
 			json.Unmarshal((reminderstatus.Value), &remindermap)
 
 			if remindermap["Output"] != health.Output {
-				log.Printf("Updating reminder data for %s", reminderkey)
+				log.Infof("Updating reminder data for %s", reminderkey)
 
 				remindermap["Output"] = health.Output
 				newreminder, _ := json.Marshal(remindermap)
@@ -380,7 +392,7 @@ func (c *ConsulAlertClient) UpdateCheckData() {
 
 				_, _, err := kvApi.CAS(reminderstatus, nil)
 				if err != nil {
-					log.Println("Unable to set kv value: ", err)
+					log.Errorf("Unable to set kv value: ", err)
 				}
 			}
 		}
@@ -398,7 +410,7 @@ func (c *ConsulAlertClient) GetReminders() []notifier.Message {
 		json.Unmarshal(kvpair.Value, &message)
 		messages = append(messages, message)
 	}
-	log.Println("Getting reminders")
+	log.Infoln("Getting reminders")
 	return messages
 }
 
@@ -407,14 +419,14 @@ func (c *ConsulAlertClient) SetReminder(m notifier.Message) {
 	data, _ := json.Marshal(m)
 	key := fmt.Sprintf("consul-alerts/reminders/%s/%s", m.Node, m.CheckId)
 	c.api.KV().Put(&consulapi.KVPair{Key: key, Value: data}, nil)
-	log.Println("Setting reminder for node: ", m.Node)
+	log.Infof("Setting reminder for node: %s", m.Node)
 }
 
 // DeleteReminder deletes a reminder
 func (c *ConsulAlertClient) DeleteReminder(node string, checkid string) {
 	key := fmt.Sprintf("consul-alerts/reminders/%s/%s", node, checkid)
 	c.api.KV().Delete(key, nil)
-	log.Println("Deleting reminder for node: ", node)
+	log.Infof("Deleting reminder for node: %s", node)
 }
 
 // NewAlerts returns a list of checks marked for notification
@@ -750,7 +762,7 @@ func (c *ConsulAlertClient) getProfileForStatus(status string) string {
 
 // GetProfileInfo returns profile info for check
 func (c *ConsulAlertClient) GetProfileInfo(node, serviceID, checkID, status string) ProfileInfo {
-	log.Println("Getting profile for node: ", node, " service: ", serviceID, " check: ", checkID)
+	log.Infof("Getting profile for node: %s service: %s check: %s", node, serviceID, checkID)
 
 	var profile string
 
@@ -770,17 +782,17 @@ func (c *ConsulAlertClient) GetProfileInfo(node, serviceID, checkID, status stri
 
 	var checkProfile ProfileInfo
 	key := fmt.Sprintf("consul-alerts/config/notif-profiles/%s", profile)
-	log.Println("profile key: ", key)
+	log.Infof("profile key: %s", key)
 	kvPair, _, _ := c.api.KV().Get(key, nil)
 	if kvPair == nil {
-		log.Println("profile key not found.")
+		log.Infoln("profile key not found.")
 		return checkProfile
 	}
 
 	if err := json.Unmarshal(kvPair.Value, &checkProfile); err != nil {
-		log.Error("Profile unmarshalling error: ", err.Error())
+		log.Errorf("Profile unmarshalling error: %s", err.Error())
 	} else {
-		log.Println("Interval: ", checkProfile.Interval, " List: ", checkProfile.NotifList)
+		log.Infof("Interval: %s List: %s", checkProfile.Interval, checkProfile.NotifList)
 	}
 
 	return checkProfile
@@ -874,7 +886,7 @@ func (c *ConsulAlertClient) CheckKeyMatchesRegexp(regexpKey string, key string) 
 		for _, pattern := range regexpList {
 			matched, err := regexp.MatchString(pattern, key)
 			if err != nil {
-				log.Printf("unable to match %s against pattern %s. Error: %s\n",
+				log.Errorf("unable to match %s against pattern %s. Error: %s\n",
 					key, pattern, err.Error())
 			}
 			if matched {

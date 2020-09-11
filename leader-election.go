@@ -22,7 +22,7 @@ func (l *LeaderElection) start() {
 		case <-l.cleanupChannel:
 			clean = true
 		default:
-			log.Infoln("Running for leader election...")
+			log.Info("Running for leader election...")
 			intChan, _ := l.lock.Lock(l.stopChannel)
 			if intChan != nil {
 				log.Infoln("Now acting as leader.")
@@ -49,8 +49,9 @@ func (l *LeaderElection) stop() {
 	log.Infoln("cleanup done")
 }
 
-func startLeaderElection(addr, dc, acl string) *LeaderElection {
+func startLeaderElection(scheme, addr, dc, acl string) *LeaderElection {
 	config := consulapi.DefaultConfig()
+	config.Scheme = scheme
 	config.Address = addr
 	config.Datacenter = dc
 	config.Token = acl
