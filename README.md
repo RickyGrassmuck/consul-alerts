@@ -1,9 +1,9 @@
 consul-alerts
 =============
 
-### Original Project: [AcalephStorage/consul-alerts](https://github.com/AcalephStorage/consul-alerts)
+#### Original Project created by [AcalephStorage/consul-alerts](https://github.com/AcalephStorage/consul-alerts)
 
-### Forked from [ansrivas/consul-alerts](https://github.com/ansrivas/consul-alerts) who added Go Module support!
+#### Forked from [ansrivas/consul-alerts](https://github.com/ansrivas/consul-alerts) who added Go Module support!
 
 ## Description
 
