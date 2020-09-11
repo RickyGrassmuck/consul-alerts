@@ -1,7 +1,9 @@
 consul-alerts
 =============
 
-### Forked from [AcalephStorage/consul-alerts](https://github.com/AcalephStorage/consul-alerts)
+### Original Project: [AcalephStorage/consul-alerts](https://github.com/AcalephStorage/consul-alerts)
+
+### Forked from [ansrivas/consul-alerts](https://github.com/ansrivas/consul-alerts) who added Go Module support!
 
 A highly available daemon for sending notifications and reminders based on Consul health checks.
 
