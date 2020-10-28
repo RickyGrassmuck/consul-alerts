@@ -106,8 +106,6 @@ func daemonMode(arguments, confData map[string]interface{}) {
 
 	// Define options before setting in either config file or on command line
 
-	defaultConsulScheme := "http"
-
 	watchChecks := false
 	watchEvents := false
 	addr := ""
@@ -115,29 +113,50 @@ func daemonMode(arguments, confData map[string]interface{}) {
 	// This exists check only works for arguments with no default. arguments with defaults will always exist.
 	// Because of this the current code overrides command line flags with config file options if set.
 
+	consulAclToken, _ = os.LookupEnv("CONSUL_TOKEN")
+	consulAddr, _ = os.LookupEnv("CONSUL_ADDR")
+	consulDc, _ = os.LookupEnv("CONSUL_DC")
+
 	if confData["consul-scheme"] != nil {
 		consulScheme = confData["consul-scheme"].(string)
 	} else {
-		if arguments["--consul-scheme"].(string) == "" {
-			consulScheme = defaultConsulScheme
+		consulSchemeEnv, present := os.LookupEnv("CONSUL_SCHEME")
+		if present {
+			consulScheme = consulSchemeEnv
 		} else {
 			consulScheme = arguments["--consul-scheme"].(string)
 		}
+
 	}
 	if confData["consul-acl-token"] != nil {
 		consulAclToken = confData["consul-acl-token"].(string)
 	} else {
-		consulAclToken = arguments["--consul-acl-token"].(string)
+		consulAclTokenEnv, present := os.LookupEnv("CONSUL_TOKEN")
+		if present {
+			consulAclToken = consulAclTokenEnv
+		} else {
+			consulAclToken = arguments["--consul-acl-token"].(string)
+		}
 	}
 	if confData["consul-addr"] != nil {
 		consulAddr = confData["consul-addr"].(string)
 	} else {
-		consulAddr = arguments["--consul-addr"].(string)
+		consulAddrEnv, present := os.LookupEnv("CONSUL_ADDR")
+		if present {
+			consulAddr = consulAddrEnv
+		} else {
+			consulAddr = arguments["--consul-addr"].(string)
+		}
 	}
 	if confData["consul-dc"] != nil {
 		consulDc = confData["consul-dc"].(string)
 	} else {
-		consulDc = arguments["--consul-dc"].(string)
+		consulDcEnv, present := os.LookupEnv("CONSUL_DC")
+		if present {
+			consulDc = consulDcEnv
+		} else {
+			consulDc = arguments["--consul-dc"].(string)
+		}
 	}
 	if confData["alert-addr"] != nil {
 		addr = confData["alert-addr"].(string)
