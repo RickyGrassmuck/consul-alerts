@@ -351,6 +351,8 @@ func (c *ConsulAlertClient) UpdateCheckData() {
 		if service == "" {
 			service = "_"
 		}
+
+		log.Infof("Getting health for: Node=%s Service=%s Check=%s", node, service, check)
 		key := fmt.Sprintf("consul-alerts/checks/%s/%s/%s", node, service, check)
 
 		status, _, _ := kvApi.Get(key, nil)
@@ -618,7 +620,7 @@ func (c *ConsulAlertClient) updateHealthCheck(key string, health *Check) {
 			storedStatus.PendingTimestamp = time.Time{}
 			changed = true
 			log.Printf(
-				"%s:%s:%s is now back to %s.",
+				"node=%s, service=%s, check=%s is now back to %s.",
 				health.Node,
 				health.ServiceName,
 				health.Name,
@@ -631,7 +633,7 @@ func (c *ConsulAlertClient) updateHealthCheck(key string, health *Check) {
 		storedStatus.PendingTimestamp = time.Now()
 		changed = true
 		log.Printf(
-			"%s:%s:%s is now pending status change from %s to %s.",
+			"node=%s, service=%s, check=%s is now pending status change from %s to %s.",
 			health.Node,
 			health.ServiceName,
 			health.Name,
@@ -650,7 +652,7 @@ func (c *ConsulAlertClient) updateHealthCheck(key string, health *Check) {
 		if int(duration.Seconds()) >= changeThreshold {
 
 			log.Printf(
-				"%s:%s:%s has changed status from %s to %s.",
+				"node=%s, service=%s, check=%s has changed status from %s to %s.",
 				health.Node,
 				health.ServiceName,
 				health.Name,
@@ -673,7 +675,7 @@ func (c *ConsulAlertClient) updateHealthCheck(key string, health *Check) {
 			changed = true
 		} else {
 			log.Printf(
-				"%s:%s:%s is pending status change from %s to %s for %s.",
+				"node=%s, service=%s, check=%s is pending status change from %s to %s for %s.",
 				health.Node,
 				health.ServiceName,
 				health.Name,
